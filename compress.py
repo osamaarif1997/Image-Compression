@@ -12,17 +12,24 @@ from tqdm import tqdm
 
 
 def resize_image(path, max_size):
+  #Check if the paramter is ended by a '/'
   if path[-1] != '/':
     path = path + '/'
-
+  
+  #List all directories in the path
   dirs = os.listdir(path)
+  #Traverse sub-directories/files in main directory
   for subdir in tqdm(dirs):
       subdir += '\\'
+      #checks if the item is sub-directory
       if os.path.isdir(path+subdir):
+        #Traverse all images/files in sub-dir
           for item in tqdm(os.listdir(path+subdir)):
+            #Checks for any duplicate images having (1) in their name (Optional)
             if os.path.isfile(path+subdir+item) and (fnmatch.fnmatch(item, '*(1)*')):
                 os.remove(path+subdir+item)
                 continue
+            #Checks if the item is file and is not already compressed    
             if os.path.isfile(path+subdir+item) and not (fnmatch.fnmatch(item, '*_cmp*')):
                 try:
                     img = Image.open(path+subdir+item)
